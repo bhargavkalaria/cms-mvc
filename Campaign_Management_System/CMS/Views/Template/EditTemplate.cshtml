@@ -1,0 +1,153 @@
+﻿@model CMS.BE.ViewModels.TemplateViewModel
+
+@{
+    ViewBag.Title = "EditTemplate";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<script src="~/Themes/ckeditor/ckeditor.js"></script>
+<style>
+    .thank-you-pop{
+	width:100%;
+ 	padding:20px;
+	text-align:center;
+}
+.thank-you-pop img{
+	width:76px;
+	height:auto;
+	margin:0 auto;
+	display:block;
+	margin-bottom:25px;
+}
+
+.thank-you-pop h1{
+	font-size: 42px;
+    margin-bottom: 25px;
+	color:#5C5C5C;
+}
+.thank-you-pop p{
+	font-size: 20px;
+    margin-bottom: 27px;
+ 	color:#5C5C5C;
+}
+.thank-you-pop h3.cupon-pop{
+	font-size: 25px;
+    margin-bottom: 40px;
+	color:#222;
+	display:inline-block;
+	text-align:center;
+	padding:10px 20px;
+	border:2px dashed #222;
+	clear:both;
+	font-weight:normal;
+}
+.thank-you-pop h3.cupon-pop span{
+	color:#03A9F4;
+}
+.thank-you-pop a{
+	display: inline-block;
+    margin: 0 auto;
+    padding: 9px 20px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+    background-color: #8BC34A;
+    border-radius: 17px;
+}
+.thank-you-pop a i{
+	margin-right:5px;
+	color:#fff;
+}
+</style>
+
+@using (Html.BeginForm())
+{
+    if (ViewBag.Error != null)
+    {
+        <p class="text-danger">@ViewBag.Error</p>
+    }
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal" style="align-content:center;">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <input type="hidden" name="TemplateId" value="@Model.TemplateId" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.TemplateName, htmlAttributes: new { @class = "control-label col-md-10" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TemplateName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TemplateName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <input type="hidden" name="CreatedDate" id="CreatedDate" value="@Model.CreatedDate" />
+    <input type="hidden" name="LastUpdated" id="LastUpdated" value="@DateTime.Now.ToLocalTime()" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.TemplateData, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.TemplateData, new { htmlAttributes = new { @id = "TemplateData", @class = "form-control", @rows = "200" } })
+            @Html.ValidationMessageFor(model => model.TemplateData, "", new { @class = "text-danger" })
+            <script>
+                CKEDITOR.replace("TemplateData");
+            </script>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info btn-style" id="btnSave"><i class="fas fa-plus-square"></i> Update Template </button>
+        <a title="Back to List" href="/Template/Templates" class="btn btn-secondary backtolist"><i class="fas fa-backward mr-2"></i>Back</a>
+    </div>
+</div>
+
+
+
+
+
+
+
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Templates")
+        <a title="Back to List" href="~/Template/Templates" class="btn btn-primary backtolist"><i class="fas fa-backward"> Back to List</i></a>
+    </div>*@
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $("#btnSave").click(function () {
+        if ($("#TemplateName").val() === '') {
+            toastr.error('Please enter template name');
+        } else if (CKEDITOR.instances['TemplateData'].getData() === '') {
+            toastr.error('Please enter design');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/Template/EditTemplate/',
+                data: {
+                    TemplateId: @Model.TemplateId,
+                    TemplateName: $("#TemplateName").val(),
+                    CreatedDate: $("#CreatedDate").val(),
+                    LastUpdated : $("#LastUpdated").val(),
+                    TemplateData: CKEDITOR.instances['TemplateData'].getData()
+                },
+                success: function (res) {
+                    if (res.success === true) {
+                         window.location.href = "/Template/Templates"
+                    }
+                    else {
+                         var data = res.error
+                            var msg = data.split('|');
+                            for (var i = 0; i < msg.length; i++) {
+                                toastr.error(msg[i]);
+                            }
+                    }
+                   
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,88 @@
+﻿@model CMS.BE.ViewModels.TemplateViewModel
+
+@{
+    ViewBag.Title = "AddTemplate";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+<script src="~/Themes/ckeditor/ckeditor.js"></script>
+
+@using (Html.BeginForm())
+{
+    if (ViewBag.Error != null)
+    {
+        <p class="text-danger">@ViewBag.Error</p>
+    }
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TemplateName, htmlAttributes: new { @class = "control-label col-md-6" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TemplateName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TemplateName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TemplateData, htmlAttributes: new { @class = "control-label col-md-6" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.TemplateData, new { htmlAttributes = new { @id = "TemplateData", @class = "form-control", @rows = "200" } })
+            @Html.ValidationMessageFor(model => model.TemplateData, "", new { @class = "text-danger" })
+            <script>
+                CKEDITOR.replace("TemplateData");
+            </script>
+        </div>
+    </div>
+    <input type="hidden" name="CreatedDate" id="CreatedDate" value="@DateTime.Now.ToLocalTime()" />
+    <input type="hidden" name="LastUpdated" id="LastUpdated" value="@DateTime.Now.ToLocalTime()" />
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info btn-style" id="btnSave"><i class="fas fa-plus-square"></i> Create Template </button>
+        <a title="Back to List" href="/Template/Templates" class="btn btn-primary backtolist"><i class="fas fa-backward mr-2"></i>Back</a>
+    </div>
+</div>
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $("#btnSave").click(function () {
+        if ($("#TemplateName").val() === '') {
+            toastr.error('Please enter template name');
+        }
+        else if (CKEDITOR.instances['TemplateData'].getData() === '') {
+            toastr.error('Please enter design');
+        }
+        else {
+            $.ajax({
+                type: 'post',
+                url: '/Template/AddTemplate/',
+                data: {
+                    TemplateName: $("#TemplateName").val(),
+                    CreatedDate: $("#CreatedDate").val(),
+                    LastUpdated : $("#LastUpdated").val(),
+                    TemplateData: CKEDITOR.instances['TemplateData'].getData() 
+                },
+                success: function (res) {
+                    if (res.success === true) {
+                         window.location.href = "/Template/Templates"
+                    }
+                    else {
+                         var data = res.error
+                            var msg = data.split('|');
+                            for (var i = 0; i < msg.length; i++) {
+                                toastr.error(msg[i]);
+                            }
+                    }
+                   
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    });
+</script>

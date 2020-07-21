@@ -1,0 +1,263 @@
+﻿@{
+    ViewBag.Title = "GenerateReport";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<link href="~/Content/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-3 col-xl-3">
+            <select class="form-control" id="campaign-type">
+                <option>Select type</option>
+                <option value="0">Campaign</option>
+                <option value="1">Quick Campaign</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 col-xl-3">
+            <div class="select2-purple">
+                <input type="text" class="form-control" id="campaing-name" placeholder="Enter campaign name" />
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 col-xl-3">
+            <input type="text" id="reportrange" class="range-style form-control" placeholder="Select date" />
+        </div>
+        <div class="col-12 col-md-6 col-lg-2 col-xl-3 d-flex justify-content-around">
+            <button class="btn btn-secondary " id="search">Search</button>
+
+            <button class="btn btn-secondary" id="download-report" disabled>Download Report</button>
+        </div>
+              
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <table class="table" style="display:none" id="report-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Positive</th>
+                        <th>Negative</th>
+                        <th>Neutral</th>
+                        <th>No Response</th>
+                        <th>Success</th>
+                        <th>Success%</th>
+                    </tr>
+                </thead>
+                <tbody id="report-data">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+<script src="~/Content/plugins/jquery/jquery.min.js"></script>
+<script src="~/Content/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        let reportDataTable;
+        let BaseUrl = "https://localhost:44308/";
+        disable();
+        let searchInfo = {
+            Type: "",
+            CId: 0,
+            StartDate: Date,
+            EndDate: Date
+        };
+        $("#campaign-type").change(function (event) {
+            if (+event.target.value === 0) {
+                destroyAutoComplete();
+                getCampaignList();
+            } else if (+event.target.value === 1) {
+                destroyAutoComplete();
+                getQucikCampaignList();
+            }
+        })
+
+
+        $('#reportrange').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            },
+            ranges: {
+                'Today': [moment(), moment().add(1, 'days')],
+                'Yesterday': [moment().subtract(1, 'days'), moment()],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+
+        $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+            searchInfo.StartDate = new Date(picker.startDate._d).toDateString();
+            searchInfo.EndDate = new Date(picker.endDate._d).toDateString();
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        });
+        $('#reportrange').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            searchInfo.StartDate = null;
+            searchInfo.EndDate = null;
+        });
+
+        function getCampaignList() {
+            $.ajax({
+                type: 'GET',
+                url: BaseUrl + 'api/CampaignApi/GetAllCampaigns',
+                success: function (e) {
+                    searchInfo.Type = "campaign";
+                    enable();
+                    initAutoComplete(autoCompleteList(e, "campaign"));
+                }
+            });
+        }
+
+        function getQucikCampaignList() {
+            $.ajax({
+                type: 'GET',
+                url: BaseUrl + 'api/QuickCampaignApi/GetAllQuickCampaigns',
+                success: function (e) {
+                    searchInfo.Type = "quick-campaign";
+                    enable();
+                    initAutoComplete(autoCompleteList(e, "quick-campaign"));
+                }
+            });
+        }
+
+        function initAutoComplete(list) {
+            $("#campaing-name").autocomplete({
+                source: list,
+                select: function (event, ui) {
+                    searchInfo.CId = ui.item.id
+                },
+                response: function (event, ui) {
+                    searchInfo.CId = 0;
+                }
+            });
+        }
+
+        function destroyAutoComplete() {
+            if ($("#campaing-name").autocomplete("instance")) {
+                $("#campaing-name").autocomplete("destroy");
+            }
+        }
+
+        function enable() {
+            $("#campaing-name").attr("disabled", false);
+            $("#reportrange").attr("disabled", false);
+        }
+
+        function disable() {
+            $("#campaing-name").attr("disabled", true);
+            $("#reportrange").attr("disabled", true);
+        }
+
+        function autoCompleteList(campaignlist, type) {
+            let tmp = [];
+            if (type === "campaign") {
+                campaignlist.forEach(d => {
+                    tmp.push({ label: d.CampaignName, id: d.CampaignId });
+                });
+            } else if (type === "quick-campaign") {
+                campaignlist.forEach(d => {
+                    tmp.push({ label: d.QuickCampaignName, id: d.QuickCampaignId });
+                });
+            }
+            return tmp;
+        }
+
+        $("#search").click(function () {
+            if (searchInfo.Type !== "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Report/GenerateReport',
+                    data: searchInfo,
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.length > 0) {
+                            enableDownload();
+                            enableTable();
+                            addReport(res);
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            } else {
+                toastr.error("please enter the details");
+            }
+        });
+        function addReport(report) {
+            reportDataTable = $("#report-table").DataTable();
+            reportDataTable.clear().destroy();
+            reportDataTable = $("#report-table").DataTable({
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                ]
+            });
+            report.forEach(d => {
+                reportDataTable.row.add([
+                    d.CampaignId,
+                    d.CampaignName,
+                    d.Positive,
+                    d.Negative,
+                    d.Neutral,
+                    d.NoResponse,
+                    successOrNot(d.successOrNot),
+                    d.percentageFor + " %"]).draw(false)
+            });
+        }
+
+        function successOrNot(data) {
+            if (data) {
+                return "Success";
+            } else {
+                return "Fail"
+            }
+        }
+
+        $("#download-report").click(function () {
+            html2canvas($('#report-table')[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }],
+                        styles: {
+                            header: {
+                                fontSize: 22,
+                                bold: true
+                            },
+                        }
+                    };
+                    pdfMake.createPdf(docDefinition).download("Report-" + searchInfo.Type + ".pdf");
+                }
+            });
+        });
+
+        function enableDownload() {
+            $("#download-report").attr("disabled", false);
+        }
+
+        function disableDownload() {
+            $("#download-report").attr("disabled", true);
+        }
+
+        function enableTable() {
+            $("#report-table").css("display","table");
+        }
+        function disableTable() {
+            $("#report-table").fadeOut();
+        }
+    });
+</script>

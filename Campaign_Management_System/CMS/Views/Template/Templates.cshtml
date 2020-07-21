@@ -1,0 +1,233 @@
+﻿@model IEnumerable<CMS.BE.ViewModels.TemplateViewModel>
+
+@{
+    ViewBag.Title = "Templates";
+}
+@{
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+<link href="~/Content/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+<div class="d-flex justify-content-sm-between my-3">
+    <h2>Email Templates List</h2>
+    @if (Session["addTemplateAccess"] != null)
+    {
+        //show link
+        <div class="add-campaign-button cursor-pointer" onclick="window.location.href = '/Template/AddTemplate'">
+            <i class="fas fa-plus mr-2" style="color:white"></i>
+            <span class="text-white">Add Email Template</span>
+        </div>
+    }
+    else
+    {
+        //disable link
+        
+    }
+</div>
+
+
+<div class="card">
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th @*class="w-75"*@>
+                        Name
+                    </th>
+                    <th>Created Date</th>
+                    <th>Last Updated</th>
+                    @if (Session["editTemplateAccess"] != null || Session["deleteTemplateAccess"] != null || Session["viewTemplateAccess"] != null)
+                    {
+                    <th>Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr class="my-5">
+                    <td style="vertical-align:middle">
+                        <i class="fas fa-file-alt"></i>
+                        @Html.DisplayFor(modelItem => item.TemplateName)
+                    </td>
+                    <td>@item.CreatedDate
+                    </td>
+                    <td>
+                        @item.LastUpdated
+                    </td>
+                    <td style="vertical-align:middle">
+                        @if (Session["editTemplateAccess"] != null)
+                        {
+                            //show link
+                            <a class="btn" href="/Template/EditTemplate/@item.TemplateId"><i class="fas fa-edit"></i></a>
+                        }
+                        else
+                        {
+                            //disable link
+                        }
+                        @if (Session["deleteTemplateAccess"] != null)
+                        {
+                            //show link
+                            <i class="far fa-trash-alt open-delete-modal" style="color:black;" href="#" id="@item.TemplateId" data-name="@item.TemplateName"></i>
+                        }
+                        else
+                        {
+                            //disble link
+                        }
+                        @if (Session["viewTemplateAccess"] != null)
+                        {
+                            //show link
+                            <i class="fas fa-eye preview-button ml-2" id="@item.TemplateId" data-preview="@item.TemplateData" data-name="@item.TemplateName" style="cursor:pointer"></i>
+                        }
+                        else
+                        {
+                            //disable link
+                        }
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+
+</div>
+<div class="modal fade" id="exampleModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">
+                    Email Template
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="delete-template">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Delete Template</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure you want to delete Template?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="delete-campaign">Delete Template</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Content/plugins/moment/moment.min.js"></script>
+<script src="~/Content/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script>
+    $(document).ready(function () {
+         const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000
+                       });
+        if ('@TempData["Message"]' == "Success!") {
+             Toast.fire({
+                type: 'success',
+                title: 'Template Successfully Added.'
+              })
+        }
+        else if ('@TempData["Message"]' == "Template updated") {
+             Toast.fire({
+                type: 'success',
+                title: 'Template Successfully Updated.'
+              })
+        }
+      $(function() {
+            $("#example1").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+            });
+        });
+
+    $(document).ready(function () {
+        let deleteId;
+        $(".preview-button").click(function (e) {
+            $(".modal-body").html('');
+            $('#exampleModal').modal('show');
+            $('.modal-title').html(e.target.dataset.name + ' Template')
+            $(".modal-body").append(e.target.dataset.preview);
+        });
+
+        $(".open-delete-modal").click(function (e) {
+            $('.modal-title').html(e.target.dataset.name +' Template')
+            //alertify.confirm("Do you really want to delete this record?");
+            $(".modal-body").html('Are you sure you want to delete Template?');
+            deleteId = e.target.id;
+            $("#delete-template").modal('show');
+        });
+
+        $('#delete-campaign').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Template/Delete/',
+                dataType: 'json',
+                data: {
+                    TemplateId: deleteId
+                },
+                success: function (result) {
+                    if (result.success === true) {
+                        sessionStorage.setItem('test', JSON.stringify(true));
+                        location.reload();
+                    }
+                    else {
+                        $("#delete-template").modal('hide');
+                        var data = result.error
+                        var msg = data.split('|');
+                        for (var i = 0; i < msg.length; i++) {
+                            toastr.error(msg[i]);
+                        }
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                    toastr.error('Error in deleting,Please try again later');
+                }
+            });
+
+        })
+           $(function () {
+        if (JSON.parse(sessionStorage.getItem('test'))) {
+            sessionStorage.setItem('test', JSON.stringify(false));
+             Toast.fire({
+                type: 'success',
+                title: 'Template Successfully Deleted.'
+              })
+        }
+       });
+    });
+    });
+
+</script>

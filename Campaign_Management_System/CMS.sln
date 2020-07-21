@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS", "CMS\CMS.csproj", "{C4C789D2-8820-4222-AAC1-076611EEFD88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.BL", "CMS.Business\CMS.BL.csproj", "{E5238A99-44FE-404E-BBD8-5AAE08184DC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.BE", "CMS.BusinessEntities\CMS.BE.csproj", "{2A1976AC-3788-4AEE-98C0-17550EAB832E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Data", "CMS.Data\CMS.Data.csproj", "{A0C8D93F-CF3E-471B-B4EA-C06AAAE442BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.Common", "CMS.Common\CMS.Common.csproj", "{FEB9CE4B-5B44-42E9-8F39-63812A2CB09B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.DL", "CMS.DL\CMS.DL.csproj", "{55A23BE8-11A2-4C46-8AD0-42C0E8EA8FEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMS.WebApi", "CMS.WebApi\CMS.WebApi.csproj", "{2B279EDD-F4EE-46F3-B8F2-DB26ADA9C4D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4C789D2-8820-4222-AAC1-076611EEFD88}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{C4C789D2-8820-4222-AAC1-076611EEFD88}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{C4C789D2-8820-4222-AAC1-076611EEFD88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4C789D2-8820-4222-AAC1-076611EEFD88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5238A99-44FE-404E-BBD8-5AAE08184DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5238A99-44FE-404E-BBD8-5AAE08184DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5238A99-44FE-404E-BBD8-5AAE08184DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5238A99-44FE-404E-BBD8-5AAE08184DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A1976AC-3788-4AEE-98C0-17550EAB832E}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{2A1976AC-3788-4AEE-98C0-17550EAB832E}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{2A1976AC-3788-4AEE-98C0-17550EAB832E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A1976AC-3788-4AEE-98C0-17550EAB832E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0C8D93F-CF3E-471B-B4EA-C06AAAE442BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0C8D93F-CF3E-471B-B4EA-C06AAAE442BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0C8D93F-CF3E-471B-B4EA-C06AAAE442BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0C8D93F-CF3E-471B-B4EA-C06AAAE442BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB9CE4B-5B44-42E9-8F39-63812A2CB09B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB9CE4B-5B44-42E9-8F39-63812A2CB09B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB9CE4B-5B44-42E9-8F39-63812A2CB09B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB9CE4B-5B44-42E9-8F39-63812A2CB09B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55A23BE8-11A2-4C46-8AD0-42C0E8EA8FEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A23BE8-11A2-4C46-8AD0-42C0E8EA8FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A23BE8-11A2-4C46-8AD0-42C0E8EA8FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A23BE8-11A2-4C46-8AD0-42C0E8EA8FEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B279EDD-F4EE-46F3-B8F2-DB26ADA9C4D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B279EDD-F4EE-46F3-B8F2-DB26ADA9C4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B279EDD-F4EE-46F3-B8F2-DB26ADA9C4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B279EDD-F4EE-46F3-B8F2-DB26ADA9C4D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D784783A-AC98-4973-8736-5667FD4E2217}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://traineetfs.thegatewaycorp.com:8080/tfs/training
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = CMS.Business\\CMS.BL.csproj
+		SccProjectName1 = CMS.Business
+		SccLocalPath1 = CMS.Business
+		SccProjectUniqueName2 = CMS.BusinessEntities\\CMS.BE.csproj
+		SccProjectName2 = CMS.BusinessEntities
+		SccLocalPath2 = CMS.BusinessEntities
+		SccProjectUniqueName3 = CMS.Common\\CMS.Common.csproj
+		SccProjectName3 = CMS.Common
+		SccLocalPath3 = CMS.Common
+		SccProjectUniqueName4 = CMS.Data\\CMS.Data.csproj
+		SccProjectName4 = CMS.Data
+		SccLocalPath4 = CMS.Data
+		SccProjectUniqueName5 = CMS.DL\\CMS.DL.csproj
+		SccProjectName5 = CMS.DL
+		SccLocalPath5 = CMS.DL
+		SccProjectUniqueName6 = CMS\\CMS.csproj
+		SccProjectName6 = CMS
+		SccLocalPath6 = CMS
+		SccProjectUniqueName7 = CMS.WebApi\\CMS.WebApi.csproj
+		SccProjectName7 = CMS.WebApi
+		SccLocalPath7 = CMS.WebApi
+	EndGlobalSection
+EndGlobal

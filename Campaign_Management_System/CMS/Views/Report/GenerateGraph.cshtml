@@ -1,0 +1,237 @@
+﻿
+@{
+    ViewBag.Title = "GenerateGraph";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<link href="~/Content/Chart.min.css" rel="stylesheet" />
+<link href="~/Content/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-3 col-xl-3">
+            <select class="form-control" id="campaign-type">
+                <option>Select type</option>
+                <option value="0">Campaign</option>
+                <option value="1">Quick Campaign</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 col-xl-3">
+            <div class="select2-purple">
+                <input type="text" class="form-control" id="campaing-name" placeholder="Enter campaign name" />
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+            <input type="text" id="reportrange" class="range-style form-control" placeholder="Select date" />
+        </div>
+        <div class="col-12 col-md-6 col-lg-2 col-xl-2">
+            <button class="btn btn-secondary w-100" id="search">Search</button>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <canvas id="campaign-chart"></canvas>
+        </div>
+    </div>
+</div>
+<script src="~/Content/plugins/jquery/jquery.min.js"></script>
+<script src="~/Content/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="~/Content/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/Scripts/Chart.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let stackedBar;
+        let BaseUrl = "https://localhost:44308/";
+        disable();
+        let searchInfo = {
+            Type: "",
+            CId: 0,
+            StartDate: Date,
+            EndDate: Date
+        };
+        $("#campaign-type").change(function (event) {
+            if (+event.target.value === 0) {
+                destroyAutoComplete();
+                getCampaignList();
+            } else if (+event.target.value === 1) {
+                destroyAutoComplete();
+                getQucikCampaignList();
+            }
+        })
+
+
+        $('#reportrange').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            },
+            ranges: {
+                'Today': [moment(), moment().add(1, 'days')],
+                'Yesterday': [moment().subtract(1, 'days'), moment()],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+
+        $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+            searchInfo.StartDate = new Date(picker.startDate._d).toDateString();
+            searchInfo.EndDate = new Date(picker.endDate._d).toDateString();
+            $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        });
+        $('#reportrange').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            searchInfo.StartDate = null;
+            searchInfo.EndDate = null;
+        });
+
+        function getCampaignList() {
+            $.ajax({
+                type: 'GET',
+                url: BaseUrl + 'api/CampaignApi/GetAllCampaigns',
+                success: function (e) {
+                    searchInfo.Type = "campaign";
+                    enable();
+                    initAutoComplete(autoCompleteList(e, "campaign"));
+                }
+            });
+        }
+
+        function getQucikCampaignList() {
+            $.ajax({
+                type: 'GET',
+                url: BaseUrl + 'api/QuickCampaignApi/GetAllQuickCampaigns',
+                success: function (e) {
+                    searchInfo.Type = "quick-campaign";
+                    enable();
+                    initAutoComplete(autoCompleteList(e, "quick-campaign"));
+                }
+            });
+        }
+
+        function initAutoComplete(list) {
+            $("#campaing-name").autocomplete({
+                source: list,
+                select: function (event, ui) {
+                    searchInfo.CId = ui.item.id
+                },
+                response: function (event, ui) {
+                    searchInfo.CId = 0;
+                }
+            });
+        }
+
+        function destroyAutoComplete() {
+            if ($("#campaing-name").autocomplete("instance")) {
+                $("#campaing-name").autocomplete("destroy");
+            }
+        }
+
+        function enable() {
+            $("#campaing-name").attr("disabled", false);
+            $("#reportrange").attr("disabled", false);
+        }
+
+        function disable() {
+            $("#campaing-name").attr("disabled", true);
+            $("#reportrange").attr("disabled", true);
+        }
+
+        function autoCompleteList(campaignlist, type) {
+            let tmp = [];
+            if (type === "campaign") {
+                campaignlist.forEach(d => {
+                    tmp.push({ label: d.CampaignName, id: d.CampaignId });
+                });
+            } else if (type === "quick-campaign") {
+                campaignlist.forEach(d => {
+                    tmp.push({ label: d.QuickCampaignName, id: d.QuickCampaignId });
+                });
+            }
+            return tmp;
+        }
+
+        $("#search").click(function () {
+            if (searchInfo.Type !== "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Report/GenerateGraph',
+                    data: searchInfo,
+                    dataType: "json",
+                    success: function (res) {
+                        generateGraph(res)
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                });
+            } else {
+                toastr.error("please enter the details");
+            }
+        });
+        function generateGraph(data) {
+            if (stackedBar) {
+                stackedBar.destroy();
+            }
+            var numberWithCommas = function (x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            var ctx = document.getElementById('campaign-chart');
+            stackedBar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.cName ? data.cName:[],
+                    datasets: [
+                        {
+                            label: 'Positive',
+                            data: data.positive ? data.positive: [],
+                            backgroundColor: '#D6E9C6',
+                        },
+                        {
+                            label: 'Negative',
+                            data: data.negative ? data.negative: [],
+                            backgroundColor: '#FAEBCC',
+                        },
+                        {
+                            label: 'Neutral',
+                            data: data.neutral ? data.neutral : [],
+                            backgroundColor: '#0F2027',
+                        },
+                        {
+                            label: 'No Response',
+                            data: data.noResponse ? data.noResponse :[],
+                            backgroundColor: '#EBCCD1',
+                        },
+                    ]
+                },
+                options: {
+                    animation: {
+                        duration: 10,
+                    },
+                    tooltips: {
+                        mode: 'label',
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+                            }
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                            gridLines: { display: false },
+                        }],
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                callback: function (value) { return numberWithCommas(value); },
+                            },
+                        }],
+                    },
+                    legend: { display: true }
+                }
+            });
+            
+        }
+    });
+
+</script>

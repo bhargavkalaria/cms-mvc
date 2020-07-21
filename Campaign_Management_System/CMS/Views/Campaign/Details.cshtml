@@ -1,0 +1,181 @@
+﻿@model CMS.BE.ViewModels.CampaignViewModel
+
+@{
+    ViewBag.Title = Model.CampaignName;
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+
+
+
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@Model.Brand.BrandName</h3>
+
+                        <p>Campaign Owner</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@Model.CampaignBudget</h3>
+
+                        <p>Budget</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner text-white">
+                        <h3>@Model.TotalUser</h3>
+
+                        <p>Customers</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>@Model.ExpectedRevenue</h3>
+
+                        <p>Expected Revenue</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-money-check-alt"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-5 connectedSortable">
+                <div class="card">
+                    <div class="card-header text-white bg-info">
+                        <h4>Campaign Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b>Campaign Name</b> : @Model.CampaignName<br /><br />
+                            <b>Current status</b> : @Model.CampaignStatus.Status<br /><br />
+                            <b>Start Date</b> : @Model.Start_Date<br /><br />
+                            <b>End Date</b> : @Model.End_Date<br /><br />
+                            <b>Created On</b> : @Model.CreatedOn<br /><br />
+                            <b>Created By</b> : @Model.User.FName @Model.User.LName<br />
+                        </p>
+                    </div>
+                    <div class="card-footer text-dark">
+                        Last updated On: @Model.ModifiedOn
+                    </div>
+                </div>
+            </section>
+            <!-- /.Left col -->
+           
+
+            <section class="col-lg-7 connectedSortable">
+                <div class="campaign-graph">
+                    <canvas id="barcanvas" style="height:300px; min-height:230px"></canvas>
+                </div>
+            </section>
+            <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+    </div>
+    <!-- /.container-fluid -->
+
+    <div class="modal-footer">
+        <a title="Back to List" href="/Campaign/Index" class="btn btn-primary backtolist"><i class="fas fa-backward mr-2"></i>Back</a>
+    </div>
+
+</section>
+<!-- /.content -->
+<script src="~/Content/plugins/jquery/jquery.min.js"></script>
+<script src="~/Scripts/Chart.min.js"></script>
+<script>
+   
+    
+    $(document).ready(function () {
+         var BaseUrl = "https://localhost:44308/";
+        $.ajax({
+                type: "GET",
+                url: BaseUrl + 'api/ResponseApi/GetResponseByCampaignId?id='+@Model.CampaignId,
+                success: function (data) {
+                    GenerateGraph(data)
+                },
+            error: function (err) {
+                    console.log(err)
+                    alert(err);
+                }
+        });
+
+        function GenerateGraph(d) {
+            let barChartData =
+            {
+                labels: ['Positive', 'Nuetral', 'Negative'],
+                datasets: [{
+                    label: 'Customer Responses',
+                    backgroundColor: [
+                        "#f990a7",
+                        "#aad2ed",
+                        "#9966FF",
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#777',
+                    hoverBorderWidth: '1',
+                    hoverBorderColor: '#2c3e50',
+                    data: [d.Positive, d.Neutral, d.Negative]
+                }]
+            };
+            var ctx1 = document.getElementById("barcanvas").getContext("2d");
+            window.myBar = new Chart(ctx1,
+                {
+                    type: 'bar',
+                    data: barChartData,
+                    options:
+                    {
+                        title:
+                        {
+                            display: true,
+                            text: "Customer Response Chart",
+                            fontSize: 25
+                        },
+                        legend: {
+                            display: false,
+                        },
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: false, labelString: '' } }],
+                            yAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: false, labelString: '' }, ticks: { stepSize: 3, beginAtZero: true } }]
+                        },
+                    }
+                });
+        }
+    });
+</script>

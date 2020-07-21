@@ -1,0 +1,387 @@
+﻿@model CMS.BE.ViewModels.CampaignViewModel
+
+@{
+    ViewBag.Title = "Quick Campaign";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<style>
+    #custom-email {
+        display: block;
+    }
+
+    #custom-sms {
+        display: none;
+    }
+</style>
+<section class="content">
+
+    @using (Html.BeginForm())
+    {
+        if (ViewBag.Error != null)
+        {
+            <p class="text-danger">@ViewBag.Error</p>
+        }
+        @Html.AntiForgeryToken()
+        <div style="padding:20px;" class="row">
+            <div class="col-md-4" id="campaign-first-row">
+                <div class="card card-secondary">
+                    <div class="card-header" style=" display: flex;width: 100%; justify-content: space-between;">
+                        <h3 class="card-title">Quick Campaign</h3>
+
+                        <div class="card-tools" style=" display: flex;justify-content: flex-end;">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="QuickCampaignName" class="col-form-label">Campaign Name:</label>
+                            <input type="text" class="form-control" id="QuickCampaignName" name="QuickCampaignName">
+                        </div>
+                        @*<div class="form-group">
+                                <label for="Owner" class="col-form-label">Owner:</label>
+                                @Html.DropDownList("BrandId", null, htmlAttributes: new { @class = "form-control", id = "BrandId" })
+                            </div>*@
+                        <div class="form-group row">
+                            <label for="Start_Date" class="col-form-label">Start Date :</label>
+                            <div class="col">
+                                <input class="form-control" type="text" id="Start_Date" name="Start_Date" value="@DateTime.Now.ToLocalTime()" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="CampaignBudget" class="col-form-label">Budget</label>
+                            <input type="number" class="form-control" id="CampaignBudget" name="CampaignBudget">
+                        </div>
+                        <div class="form-group">
+                            <label for="ExpectedRevenue" class="col-form-label">Expected Revenue:</label>
+                            <input type="number" class="form-control" id="ExpectedRevenue" name="ExpectedRevenue">
+                        </div>
+
+
+                        <input type="hidden" name="CreatedOn" id="CreatedOn" value="@DateTime.Now.ToLocalTime()" />
+                        <input type="hidden" name="ModifiedOn" id="ModifiedOn" value="@DateTime.Now.ToLocalTime()" />
+                        <input type="hidden" name="CreatedBy" id="CreatedBy" value="1" />
+                        @*<input type="hidden" name="TemplateId" id="TemplateId" value="1" />*@
+
+                        @*<div class="form-group">
+                                <label for="MarketingTypeId">Marketing Type</label>
+                                @Html.DropDownList("MarketingTypeId", null, htmlAttributes: new { @class = "form-control", id = "MarketingTypeId" })
+                            </div>
+                            <div class="form-group">
+                                <label for="MarketingTypeId">Marketing Type</label>
+                                @Html.DropDownList("MarketingStrategyId", null, htmlAttributes: new { @class = "form-control", id = "MarketingStrategyId" })
+                            </div>*@
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+            <div class="col-md-8" id="custom-email">
+                <div class="card card-secondary">
+                    <div class="card-header" style=" display: flex;width: 100%; justify-content: flex-end;">
+                        <h3 class="card-title">Email</h3>
+
+                        <div class="card-tools " style=" display: flex;width: 100%; justify-content: flex-end;">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-secondary mb-2 btn-sm" id="preview-email-add-template">Preview email</button>
+                            </div>
+                            <select class="form-control" id="TemplateId" name="TemplateId"></select>
+                        </div>
+
+                        <div class="form-group" id="frame">
+
+                            <iframe width="100%" height="500px" scrolling="yes" srcdoc="" id="TemplateData"></iframe>
+
+
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">User Details</h3>
+                            </div>
+
+                            <div class="card-body">
+                                <!-- /.card-header -->
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info btn-style" id="btnSave"><i class="fas fa-mail-bulk"></i> Launch </button>
+            <a title="Back to List" href="/Campaign/Index" class="btn btn-primary backtolist"><i class="fas fa-backward mr-2"></i>Back</a>
+        </div>
+
+    }
+    <div class="modal fade" id="preview">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Email preview</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="email-content">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Themes/ckeditor/ckeditor.js"></script>
+<script src="~/Content/plugins/moment/moment.min.js"></script>
+<script src="~/Content/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script>
+     
+    $(document).ready(function (e) {
+        let isTemplateChanged = false;
+        $("#example11").DataTable();
+        var BaseUrl = "https://localhost:44308/";
+         $("#TemplateId").append($("<option disabled selected></option>").val('').html(' Select Template'));
+        $.ajax({  
+           type: "GET",  
+           url:  BaseUrl + 'api/TemplateApi/GetAllTemplates',  
+           success: function (data) {  
+                $.each(data, function () {
+                   $("#TemplateId").append($("<option></option>").val(this['TemplateId']).html(this['TemplateName']));
+               });
+            },
+            error: function () {
+                    alert('Error in Template dropdown!');
+                }
+        }); 
+
+           $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/CustomerApi/GetAllCustomers',
+            dataType: 'json',
+            success: function (data) {
+                data.forEach(function (data) {
+                    $("#table-body").append(`<tr>
+                                                <td>
+                                                    <input type="checkbox" value="`+ data.CustomerID + `" name="CustomerID" id="CustomerID" />
+                                                </td>
+                                                <td>
+                                                    `+ data.CustomerName + `
+                                                </td>
+                                                <td>
+                                                    `+ data.Email + `
+                                                </td>
+                                            </tr>`);
+                    $("#example1").DataTable()
+                });
+            },
+            error: function () {
+                alert('Error in fetching customers!');
+            }
+        });
+
+        $("#btnSave").click(function () {
+            var cid;
+            var customerList = [];
+            $.each($("input[name='CustomerID']:checked"), function () {
+                customerList.push(+$(this).val());
+            });
+            if ($('#QuickCampaignName').val() == '') {
+                $('#QuickCampaignName').focus();
+                toastr.error('Please enter campaign name');
+            }
+            else if ($('#CampaignBudget').val() == '') {
+                $('#CampaignBudget').focus();
+                toastr.error('Please enter campaign budget');
+            }
+            else if ($('#ExpectedRevenue').val() == '') {
+                $('#ExpectedRevenue').focus();
+                toastr.error('please enter expected revenue');
+            }
+            else if ($('#TemplateId').val() === 0) {
+                toastr.error('please select email template');
+            }
+            else if (customerList.length === 0) {
+                $('#custom-email').focus();
+                toastr.error('please select the customer details');
+            }
+            else {
+                $('#btnSave').addClass('active-stripes');
+                $('#btnSave').addClass('btn-stripped');
+                $('#btnSave').attr('disabled', true);
+                if (isTemplateChanged) {
+                    var TD = CKEDITOR.instances['TemplateData'].getData();
+                    console.log(TD);
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/QuickCampaign/AddQuickCampaign',
+                    data: JSON.stringify({
+                        "QuickCampaignViewModel": {
+                            QuickCampaignName: $('#QuickCampaignName').val(),
+                            Start_Date: $('#Start_Date').val(),
+                            CreatedOn: $('#CreatedOn').val(),
+                            ModifiedOn: $('#ModifiedOn').val(),
+                            CreatedBy: $('#CreatedBy').val(),
+                            CampaignBudget: $('#CampaignBudget').val(),
+                            ExpectedRevenue: $('#ExpectedRevenue').val(),
+                            TemplateId: $('#TemplateId').val()
+                        },
+                        CustomerID: customerList,
+                        Temp: TD
+                    }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        if (res.success === true) {
+                             $('#btnSave').removeClass('active-stripes');
+                        $('#btnSave').removeClass('btn-stripped');
+                        $('#btnSave').attr('disabled', false);
+                       window.location.href = "/QuickCampaign/QuickCampaignsList"
+                        }
+                        else {
+                            var data = res.error
+                            var msg = data.split('|');
+                            for (var i = 0; i < msg.length; i++) {
+                                toastr.error(msg[i]);
+                            }
+                            $('#btnSave').removeClass('active-stripes');
+                            $('#btnSave').removeClass('btn-stripped');
+                            $('#btnSave').attr('disabled', false);
+                            
+                        }
+                       
+                    }, error: function () {
+                        
+                       
+                    }
+
+                });
+            }
+        });
+
+        $("#TemplateId").change(function (e) {
+            if (e.target.value) {
+                if (CKEDITOR.instances['TemplateData']) {
+                    CKEDITOR.instances['TemplateData'].destroy()
+                }
+                $.ajax({
+                    type: 'GET',
+                    url:  BaseUrl + 'api/TemplateApi/GetTemplate?id=' + e.target.value,  
+                    dataType: 'json',
+                    success: function (result) {
+                        document.getElementById("TemplateData").style.display = "block";
+                        //document.getElementById("TemplateData").srcdoc = result.TemplateData;
+                        CKEDITOR.replace('TemplateData');
+                        CKEDITOR.instances['TemplateData'].setData(result.TemplateData);
+                        CKEDITOR.instances.TemplateData.on('key', function () {
+                            isTemplateChanged = true;
+                        });
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+          $('#checkall').change(function () {
+    $('.cb-element').prop('checked',this.checked);
+        });
+
+        $('.cb-element').change(function () {
+         if ($('.cb-element:checked').length == $('.cb-element').length){
+          $('#checkall').prop('checked',true);
+         }
+         else {
+          $('#checkall').prop('checked',false);
+         }
+        });
+
+    $("#preview-email-add-template").click(function (e) {
+                e.preventDefault();
+                let tmpdata = [];
+                $.each($("input[name='CustomerID']:checked"), function () {
+                    tmpdata.push(+$(this).val());
+                });
+                let TD;
+                if (isTemplateChanged) {
+                    TD = CKEDITOR.instances['TemplateData'].getData();
+                }
+                
+                if ($('#QuickCampaignName').val() == '') {
+                    $('#QuickCampaignName').focus();
+                    toastr.error('Please enter Quick Campaign name');
+                }
+
+                if ($('#TemplateId').val() == null) {
+                    toastr.error('Select template');
+                 }
+                if (tmpdata.length > 0) {
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: BaseUrl + 'api/QuickCampaignApi/EmailPreview',
+                        data: JSON.stringify({
+                             "QuickCampaignViewModel": {
+                            QuickCampaignName: $('#QuickCampaignName').val(),
+                            Start_Date:  new Date(),
+                            CreatedOn: new Date(),
+                            ModifiedOn:  new Date(),
+                            CreatedBy: 1,
+                            CampaignBudget:1,
+                            ExpectedRevenue: 1,
+                            TemplateId: $('#TemplateId').val()
+                        },
+                            CustomerID: tmpdata,
+                            Temp: TD ? TD : CKEDITOR.instances['TemplateData'].getData()
+                        }),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (result) {
+                            $("#preview").modal("show");
+                            $("#email-content").html(result);
+                        }, error: function () {
+                        }
+                    });
+                } else {
+                    toastr.error("please select the customer");
+                }
+    });
+      
+    });
+
+  
+
+</script>

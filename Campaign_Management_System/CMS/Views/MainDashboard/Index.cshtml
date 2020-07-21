@@ -1,0 +1,581 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+<!DOCTYPE html>
+<!-- Main content -->
+<section class="content">
+
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-gradient-info">
+                    <div class="info-box-content w-100">
+                        <span class="info-box-text">Success Rate</span>
+                        <span class="info-box-number" id="success-rate"></span>
+                        <div class="progress">
+                            <div class="progress-bar" id="success-progress"></div>
+                        </div>
+                        <span class="progress-description text-small" id="success-text">
+                            70% Increase in 30 Days
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- ./col -->
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-primary">
+                    <div class="info-box-content w-100">
+                        <span class="info-box-text">Total no of Campaigns</span>
+                        <span class="info-box-number" id="campaign-number">53</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" id="campaign-progress"></div>
+                        </div>
+                        <span class="progress-description text-small" id="campaign-text">
+                            70% Increase in 30 Days
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- ./col -->
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-gradient-success">
+                    <div class="info-box-content w-100">
+                        <span class="info-box-text">Marketing Strategy</span>
+                        <br />
+                        <div id="carouselExampleInterval" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner" id="marketing-strategies">
+
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- ./col -->
+            <div class="col-md-3 col-sm-6 col-12">
+                <div class="info-box bg-danger">
+                    <div class="info-box-content w-100">
+                        <span class="info-box-text">Total no of Active Campaigns</span>
+                        <span class="info-box-number" id="active-rate">53</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" id="active-progress"></div>
+                        </div>
+                        <span class="progress-description text-small" id="active-text">
+                            70% Increase in 30 Days
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <!-- ./col -->
+        </div>
+
+    </div>
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title text-dark">Campaign Status</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg text-primary" id="active-campaign">Active:820</span>
+                                </p>
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg text-success ml-4" id="completed-campaign">Completed:100</span>
+                                </p>
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg text-secondary ml-4" id="started-campaign">Started:200</span>
+                                </p>
+                            </div>
+                            <!-- /.d-flex -->
+
+                            <div class="position-relative mb-4">
+                                <canvas id="visitors-chart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col-md-6 -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title text-dark" >Campaign</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column" style="visibility:hidden">
+                                    <span class="text-bold text-lg">$18,230.00</span>
+                                </p>
+                            </div>
+                            <!-- /.d-flex -->
+
+                            <div class="position-relative mb-4">
+                                <canvas id="sales-chart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col-md-6 -->
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title text-dark">Top three campaign</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="position-relative mb-4">
+                                <canvas id="top-three-campaign" height="200"></canvas>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col-md-6 -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title text-dark">Top Budget campaign</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column" style="visibility:hidden">
+                                    <span class="text-bold text-lg">$18,230.00</span>
+                                    <span>Sales Over Time</span>
+                                </p>
+                               
+                            </div>
+                            <!-- /.d-flex -->
+
+                            <div class="position-relative mb-4">
+                                <canvas id="campaign-budget" height="200"></canvas>
+                            </div>
+                                                     
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+                </div>
+                <!-- /.col-md-6 -->
+            </div>
+            <div class="row">
+                <div class="card col-6">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h3 class="card-title text-dark">Brand</h3>
+                                               
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="chart-responsive">
+                                    <canvas id="pieChart" height="150"></canvas>
+                                </div>
+                                <!-- ./chart-responsive -->
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                    </div>
+               
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</section>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/Chart.min.js"></script>
+<script>
+    //$('#campaign-date').daterangepicker({
+    //    singleDatePicker: true,
+    //    showDropdowns: true,
+    //    maxYear: parseInt(moment().format('YYYY'), 10),
+    //    locale: {
+    //        format: 'M/D/YY h:mm A'
+    //    },
+    //}, function (start) {
+    //    end = start._d
+    //});
+    $(document).ready(function () {
+        getAllData();
+        var $visitorsChart = $('#visitors-chart');
+        var mode = 'index';
+        var intersect = true;
+        var ticksStyle = {
+            fontColor: '#495057',
+            fontStyle: 'bold'
+        }
+        function getAllData() {
+            $.ajax({
+                type: 'GET',
+                url: '/MainDashboard/GetDashboardData',
+                success: function (e) {
+                    console.log(e)
+                    setBasicDetails(e);
+                    campaignStatusChart(e);
+                    campaignData(e);
+                    topThreeResponse(e);
+                    topBudgetCampaign(e);
+                    topBrands(e);
+                }
+            });
+        }
+
+        function setBasicDetails(res) {
+            $("#success-rate").html(res.basicDetails.SuccessRate+"%");
+            $("#success-progress").css("width", res.basicDetails.SuccessRate + "%");
+            $("#success-text").text(res.basicDetails.SuccessIncrease);
+            $("#campaign-number").html(res.basicDetails.CampaignCount);
+            $("#campaign-progress").css("width", res.basicDetails.CampaignCount + "%");
+            $("#campaign-text").text(res.basicDetails.CampaignIncrease);
+            res.marketingStrategies.forEach(function (d) {
+                $("#marketing-strategies").append(`<div class="carousel-item" data - interval="10000" >
+                        <h5 style="text-align:center;">`+ d.StrategyName + `</h5>
+                                </div>`);
+                $('.carousel').carousel();
+                $('.carousel-item').eq(0).addClass("active");
+            });
+            $("#active-rate").html(res.basicDetails.ActiveCampaignCount);
+            $("#active-progress").css("width", res.basicDetails.ActiveCampaignCount + "%");
+            $("#active-text").text(res.basicDetails.ActiveCampaignIncrease);
+        }
+
+        function campaignStatusChart(res) {
+            let active = [];
+            let completed= [];
+            let created = [];
+            let date = [];
+            let a = 0;
+            let c = 0;
+            let cc = 0;
+            res.statusCountList.forEach(function (s) {
+                a += s.ActiveCount;
+                c += s.CompletedCount;
+                cc += s.CreatedCount;
+                active.push(s.ActiveCount);
+                completed.push(s.CompletedCount);
+                created.push(s.CreatedCount);
+                date.push(s.date);
+            });
+            $("#active-campaign").html("Active: "+a);
+            $("#completed-campaign").html("Completed: " +c);
+            $("#started-campaign").html("Created: " +cc);
+            var visitorsChart = new Chart($visitorsChart, {
+                data: {
+                    labels: date,
+                    datasets: [{
+                        label:"Active",
+                        type: 'line',
+                        data: active,
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgb(66,165,245)',
+                        pointBorderColor: 'rgb(66,165,245)',
+                        pointBackgroundColor: 'rgb(66,165,245)',
+                        fill: false
+                        // pointHoverBackgroundColor: '#007bff',
+                        // pointHoverBorderColor    : '#007bff'
+                    },
+                    {
+                        label: "Completed",
+                        type: 'line',
+                        data: completed,
+                        backgroundColor: 'tansparent',
+                        borderColor: 'rgb(102,187,106)',
+                        pointBorderColor: 'rgb(102,187,106)',
+                        pointBackgroundColor: 'rgb(102,187,106)',
+                        fill: false
+                        // pointHoverBackgroundColor: '#ced4da',
+                        // pointHoverBorderColor    : '#ced4da'
+                    }, {
+                        label: "Created",
+                        type: 'line',
+                        data: created,
+                        backgroundColor: 'tansparent',
+                        borderColor: 'rgb(120,144,156)',
+                        pointBorderColor: 'rgb(120,144,156)',
+                        pointBackgroundColor: 'rgb(120,144,156)',
+                        fill: false
+                        // pointHoverBackgroundColor: '#ced4da',
+                        // pointHoverBorderColor    : '#ced4da'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        }
+
+        function campaignData(res) {
+            let monthLabel = [];
+            let monthData = [];
+            res.campaignByMonthYear.forEach(function (d) {
+                monthLabel.push(d.NameOfTheYearOrMonth);
+                monthData.push(d.CampaignCount);
+            });
+            var $salesChart = $('#sales-chart')
+            var salesChart = new Chart($salesChart, {
+                type: 'bar',
+                data: {
+                    labels: monthLabel,
+                    datasets: [
+                        {
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: monthData
+                        },
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        }
+
+        function topThreeResponse(res) {
+            let positive = [];
+            let negative = [];
+            let neutral = [];
+            let noResponse = [];
+            let cname = [];
+            res.topThreeResponse.forEach(function (d) {
+                positive.push(d.Positive);
+                negative.push(d.Negative);
+                neutral.push(d.Neutral);
+                noResponse.push(d.NoResponse);
+                cname.push(d.CampaignName);
+            });
+            var numberWithCommas = function (x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            var ctx = document.getElementById('top-three-campaign');
+            stackedBar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cname,
+                    datasets: [
+                        {
+                            label: 'Positive',
+                            data: positive ,
+                            backgroundColor: '#D6E9C6',
+                        },
+                        {
+                            label: 'Negative',
+                            data: negative ,
+                            backgroundColor: '#FAEBCC',
+                        },
+                        {
+                            label: 'Neutral',
+                            data: neutral ,
+                            backgroundColor: '#0F2027',
+                        },
+                        {
+                            label: 'No Response',
+                            data: noResponse ,
+                            backgroundColor: '#EBCCD1',
+                        },
+                    ]
+                },
+                options: {
+                    animation: {
+                        duration: 10,
+                    },
+                    tooltips: {
+                        mode: 'label',
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].label + ": " + numberWithCommas(tooltipItem.yLabel);
+                            }
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            stacked: true,
+                            gridLines: { display: false },
+                        }],
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                callback: function (value) { return numberWithCommas(value); },
+                            },
+                        }],
+                    },
+                    legend: { display: true }
+                }
+            });
+        }
+
+        function topBudgetCampaign(res) {
+            let cname = [];
+            let budget = [];
+            res.topFiveBrands.forEach(function (d) {
+                cname.push(d.BrandName);
+                budget.push(d.BrandBudget);
+            });
+            let campaignBudget = $('#campaign-budget')
+            let salesChart = new Chart(campaignBudget, {
+                type: 'horizontalBar',
+                data: {
+                    labels: cname,
+                    datasets: [
+                        {
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: budget
+                        },
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        }
+
+        function topBrands(res) {
+            let totalBrand = [];
+            let brandName = [];
+            res.topFiveBrands.forEach(function (d) {
+                brandName.push(d.BrandName);
+                totalBrand.push(d.BrandCampaignCount);
+            });
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieData = {
+                labels: brandName,
+                datasets: [
+                    {
+                        data: totalBrand,
+                        backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef'],
+                    }
+                ]
+            }
+            var pieOptions = {
+                legend: {
+                    display: true
+                }
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var pieChart = new Chart(pieChartCanvas, {
+                type: 'doughnut',
+                data: pieData,
+                options: pieOptions
+            })
+        }
+    });
+</script>

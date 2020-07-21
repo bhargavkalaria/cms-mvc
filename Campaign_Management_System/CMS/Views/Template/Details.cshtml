@@ -1,0 +1,43 @@
+﻿@model CMS.BusinessEntities.ViewModels.TemplateViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+
+<h2 style="display:flex;justify-content:center;">Preview</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        @*<dt>
+            @Html.DisplayNameFor(model => model.TemplateId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateId)
+        </dd>*@
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateData)
+        </dt>
+
+        <dd>
+            <iframe width="100%" height="400" scrolling="yes" srcdoc="@Model.TemplateData"></iframe>
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditTemplate", new { id = Model.TemplateId }) |
+    <a title="Back to List" href="~/Template/Templates" class="btn btn-primary backtolist"><i class="fas fa-backward"> Cancel</i></a>
+
+</p>

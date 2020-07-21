@@ -1,0 +1,580 @@
+﻿@model CMS.BE.ViewModels.CampaignViewModel
+
+@{
+    ViewBag.Title = "Addcampaign";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<style>
+    #custom-email {
+        display: none;
+    }
+
+    #custom-sms {
+        display: none;
+    }
+</style>
+<section class="content">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div style="padding:20px;" class="row">
+            <div class="col-md-12" id="campaign-first-row">
+                <div class="card card-secondary">
+                    <div class="card-header" style=" display: flex;width: 100%; justify-content: flex-end;">
+                        <h3 class="card-title">Campaign</h3>
+
+                        <div class="card-tools" style=" display: flex;width: 100%; justify-content: flex-end;">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="form-group">
+                            <label for="CampaignName" class="col-form-label">Campaign Name:</label>
+                            <input type="text" class="form-control" id="CampaignName" name="CampaignName">
+                        </div>
+                        <div class="form-group">
+                            <label for="CampaignOwner" class="col-form-label">Campaign Owner:</label>
+                            <select class="form-control" id="BrandId" name="BrandId"></select>
+                            @Html.ValidationMessageFor(model => model.BrandId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group row">
+                            <label for="Start_Date" class="col-form-label">Start Date :</label>
+                            <div class="col">
+                                <input class="form-control" type="text" id="Start_Date" name="Start_Date" placeholder="{0:yyyy-MM-dd}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="End_Date" class="col-form-label">End Date :</label>
+                            <div class="col">
+                                <input class="form-control" type="text" id="End_Date" name="End_Date" placeholder="{0:yyyy-MM-dd}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="CampaignBudget" class="col-form-label">Budget</label>
+                            <input type="number" class="form-control" id="CampaignBudget" name="CampaignBudget">
+                        </div>
+                        <div class="form-group">
+                            <label for="ExpectedRevenue" class="col-form-label">Expected Revenue:</label>
+                            <input type="number" class="form-control" id="ExpectedRevenue" name="ExpectedRevenue">
+                        </div>
+
+                        <input type="hidden" name="CreatedOn" id="CreatedOn" value="@DateTime.Now.ToLocalTime()" />
+                        <input type="hidden" name="ModifiedOn" id="ModifiedOn" value="@DateTime.Now.ToLocalTime()" />
+                        <input type="hidden" name="CreatedBy" id="CreatedBy" value="1" />
+                        @*<input type="hidden" name="TemplateId" id="TemplateId" value="1" />*@
+                        <div class="form-group">
+                            <label for="CampaignStatusId">Campaign Status</label>
+                            <select class="form-control" id="CampaignStatusId" name="CampaignStatusId"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="MarketingTypeId">Marketing Type</label>
+                            <select class="form-control" id="MarketingTypeId" name="MarketingTypeId"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="MarketingStrategyId">Marketing Strategy</label>
+                            <select class="form-control" id="MarketingStrategyId" name="MarketingStrategyId"></select>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="radio1">
+                                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1">Email
+                            </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="radio2">
+                                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">SMS
+                            </label>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+            <div class="col-md-8" id="custom-email">
+                <div class="card card-secondary">
+                    <div class="card-header" style=" display: flex;width: 100%; justify-content: flex-end;">
+                        <h3 class="card-title">Email</h3>
+
+                        <div class="card-tools " style=" display: flex;width: 100%; justify-content: flex-end;">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-group">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-secondary mb-2 btn-sm" id="preview-email-add-template">Preview email</button>
+                            </div>
+                            <select class="form-control" id="TemplateId" name="TemplateId"></select>
+                        </div>
+
+                        <div class="form-group" id="frame">
+
+                            <iframe width="100%" height="500px" scrolling="yes" srcdoc="" id="TemplateData"></iframe>
+
+
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <label class="m-0">User Details</label>
+                            </div>
+
+                            <div class="card-body">
+                                <!-- /.card-header -->
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" name="all" id="checkall" /></th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+            </div>
+            <div class="col-md-8" id="custom-sms">
+                <div class="card card-secondary">
+                    <div class="card-header" style=" display: flex;width: 100%; justify-content: flex-end;">
+                        <h3 class="card-title">SMS</h3>
+                        <div class="card-tools " style=" display: flex;width: 100%; justify-content: flex-end;">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="comment">Write your Message:</label>
+                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                        </div>
+                        <div class="card">
+
+                            <div class="card-header">
+                                <h3 class="card-title">DataTable with default features</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <!-- /.card-header -->
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="inputEstimatedBudget">Estimated budget</label>
+                            <input type="number" id="inputEstimatedBudget" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputSpentBudget">Total amount spent</label>
+                            <input type="number" id="inputSpentBudget" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEstimatedDuration">Estimated project duration</label>
+                            <input type="number" id="inputEstimatedDuration" class="form-control">
+                        </div> -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info btn-style" id="btnSave"><i class="fas fa-plus-square"></i> Create Campaign </button>
+            <a title="Back to List" href="/Campaign/Index" class="btn btn-primary backtolist"><i class="fas fa-backward mr-2"></i>Back</a>
+        </div>
+    }   
+
+    <div class="modal fade" id="preview">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Email preview</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="email-content">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Themes/ckeditor/ckeditor.js"></script>
+<script src="~/Content/plugins/moment/moment.min.js"></script>
+<script src="~/Content/plugins/daterangepicker/daterangepicker.js"></script>
+<script>
+
+    $(document).ready(function (e) {
+        let isTemplateChanged = false;
+        let start;
+        let end;
+        let customerList = [];
+        
+        $("#example11").DataTable();
+        var BaseUrl = "https://localhost:44308/";
+
+        $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/BrandApi/GetAllBrands',
+            success: function (data) {
+                $.each(data, function () {
+                    $("#BrandId").append($("<option></option>").val(this['BrandId']).html(this['BrandName']));
+                });
+            },
+            error: function () {
+                alert('Error in Brand dropdown!');
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/CampaignApi/GetAllMTypes',
+            success: function (data) {
+                $.each(data, function () {
+                    $("#MarketingTypeId").append($("<option></option>").val(this['MarketingTypeId']).html(this['MarketingTypeName']));
+                });
+            },
+            error: function () {
+                alert('Error in Marketing Type dropdown!');
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/CampaignApi/GetAllStrategies',
+            success: function (data) {
+                $.each(data, function () {
+                    $("#MarketingStrategyId").append($("<option></option>").val(this['MarketingStrategyId']).html(this['StrategyName']));
+                });
+            },
+            error: function () {
+                alert('Error in Marketing Type dropdown!');
+            }
+        });
+        $("#TemplateId").append($("<option disabled selected></option>").val('').html(' Select Template'));
+        $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/TemplateApi/GetAllTemplates',
+            success: function (data) {
+                $.each(data, function () {
+                    $("#TemplateId").append($("<option></option>").val(this['TemplateId']).html(this['TemplateName']));
+                });
+            },
+            error: function () {
+                alert('Error in Template dropdown!');
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/CampaignApi/GetAllCampaignStatuses/'+0,
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function () {
+                    $("#CampaignStatusId").append($("<option></option>").val(this['CampaignStatusId']).html(this['Status']));
+                });
+            },
+            error: function () {
+                alert('Error in status dropdown!');
+            }
+        });
+
+         $.ajax({
+            type: "GET",
+            url: BaseUrl + 'api/CustomerApi/GetAllCustomers',
+            dataType: 'json',
+            success: function (data) {
+                data.forEach(function (data) {
+                    $("#table-body").append(`<tr>
+                                                <td>
+                                                    <input type="checkbox" value="`+ data.CustomerID + `" name="CustomerID" id="CustomerID" />
+                                                </td>
+                                                <td>
+                                                    `+ data.CustomerName + `
+                                                </td>
+                                                <td>
+                                                    `+ data.Email + `
+                                                </td>
+                                            </tr>`);
+                    $("#example1").DataTable()
+                });
+            },
+            error: function () {
+                alert('Error in fetching customers!');
+            }
+        });
+
+        $("#btnSave").click(function () {
+            var cid;
+            $.each($("input[name='CustomerID']:checked"), function () {
+                customerList.push(+$(this).val());
+            });
+            if ($('#CampaignName').val() == '') {
+                $('#CampaignName').focus();
+                toastr.error('Please enter campaign name');
+            }
+            else if ($('#CampaignBudget').val() == '') {
+                $('#CampaignBudget').focus();
+                toastr.error('Please enter campaign budget');
+            }
+            else if ($('#ExpectedRevenue').val() == '') {
+                $('#ExpectedRevenue').focus();
+                toastr.error('please enter expected revenue');
+            }
+            else if ($('#TemplateId').val() === 0) {
+                toastr.error('please select email template');
+            }
+            else if (customerList.length === 0) {
+                $('#radio1').prop('checked', true);
+                $("#campaign-first-row").removeClass();
+                $("#campaign-first-row").addClass("col-4");
+                $('#custom-email').fadeIn();
+                $('#custom-email').focus();
+                toastr.error('please select the customer details');
+            }
+            else {
+                $('#btnSave').addClass('active-stripes');
+                $('#btnSave').addClass('btn-stripped');
+                $('#btnSave').attr('disabled', true);
+                if (isTemplateChanged) {
+                    var TD = CKEDITOR.instances['TemplateData'].getData();
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: '/Campaign/Addcampaign',
+                    data: JSON.stringify({
+                        "CampaignViewModel": {
+                            CampaignName: $('#CampaignName').val(),
+                            CampaignOwner: $('#CampaignOwner').val(),
+                            Start_Date: start ? start : moment($('#Start_Date').val())._d,
+                            End_Date: end ? end : moment($('#End_Date').val())._d,
+                            CampaignBudget: $('#CampaignBudget').val(),
+                            ExpectedRevenue: $('#ExpectedRevenue').val(),
+                            CreatedOn: $('#CreatedOn').val(),
+                            ModifiedOn: $('#ModifiedOn').val(),
+                            CreatedBy: $('#CreatedBy').val(),
+                            CampaignStatusId: $('#CampaignStatusId').val(),
+                            MarketingTypeId: $('#MarketingTypeId').val(),
+                            MarketingStrategyId: $('#MarketingStrategyId').val(),
+                            TemplateId: $('#TemplateId').val(),
+                            BrandId: $('#BrandId').val(),
+                        },
+                        CustomerID: customerList,
+                        Temp: TD
+
+                    }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (res) {
+                        console.log("reached");
+                        if (res.success === true) {
+                             $('#btnSave').removeClass('active-stripes');
+                        $('#btnSave').removeClass('btn-stripped');
+                        $('#btnSave').attr('disabled', false);
+                        window.location.href = "/Campaign/Index"
+                        }
+                        else {
+                            var data = res.error
+                            var msg = data.split('|');
+                            for (var i = 0; i < msg.length; i++) {
+                                toastr.error(msg[i]);
+                            }
+                            $('#btnSave').removeClass('active-stripes');
+                            $('#btnSave').removeClass('btn-stripped');
+                            $('#btnSave').attr('disabled', false);
+                            
+                        }
+                       
+                    }, error: function () {
+                        
+                       
+                    }
+                });
+            }
+        });
+        $('#radio1').change(function (e) {
+            if (!$("input[name='name']:checked").val()) {
+                $("#campaign-first-row").removeClass();
+                $("#campaign-first-row").addClass("col-4");
+                $("#custom-sms").fadeOut(300);
+                setTimeout(function () {
+                    $("#custom-email").fadeIn();
+                }, 400)
+            } else {
+                $("#custom-sms").fadeOut();
+            }
+        });
+        $("#radio2").change(function (e) {
+            if (!$("input[name='name']:checked").val()) {
+                $("#campaign-first-row").removeClass();
+                $("#campaign-first-row").addClass("col-4");
+                $("#custom-email").fadeOut(300);
+                setTimeout(function () {
+                    $("#custom-sms").fadeIn();
+                }, 400)
+            } else {
+                $("#custom-email").fadeOut();
+            }
+        });
+
+        $("#TemplateId").change(function (e) {
+            if (e.target.value) {
+                if (CKEDITOR.instances['TemplateData']) {
+                    CKEDITOR.instances['TemplateData'].destroy()
+                }
+                $.ajax({
+                    type: 'GET',
+                    url: BaseUrl + 'api/TemplateApi/GetTemplate?id=' + e.target.value,
+                    dataType: 'json',
+                    success: function (result) {
+                        document.getElementById("TemplateData").style.display = "block";
+                        //document.getElementById("TemplateData").srcdoc = result.TemplateData;
+                        CKEDITOR.replace('TemplateData');
+                        CKEDITOR.instances['TemplateData'].setData(result.TemplateData);
+                        CKEDITOR.instances.TemplateData.on('key', function () {
+                            isTemplateChanged = true;
+                        });
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+
+
+        $('#Start_Date').daterangepicker({
+            singleDatePicker: true,
+            timePicker: true,
+            locale: {
+                format: 'M/D/YY h:mm A'
+            },
+            minDate: moment(),
+        }, function (startdate) {
+            start = startdate._d
+        });
+        $('#End_Date').daterangepicker({
+            singleDatePicker: true,
+            timePicker: true,
+            locale: {
+                format: 'M/D/YY h:mm A'
+            },
+            minDate: moment().add(24, 'hour'),
+        }, function (start) {
+            end = start._d
+        });
+        $('#Start_Date').on('apply.daterangepicker', function (ev, picker) {
+            $('#End_Date').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                locale: {
+                    format: 'M/D/YY h:mm A'
+                },
+                minDate: moment(picker.startDate._d).add(1, 'days'),
+            }, function (start) {
+                end = start._d
+            });
+        });
+
+        $('#checkall').change(function () {
+            $('.cb-element').prop('checked', this.checked);
+        });
+
+        $('.cb-element').change(function () {
+            if ($('.cb-element:checked').length == $('.cb-element').length) {
+                $('#checkall').prop('checked', true);
+            }
+            else {
+                $('#checkall').prop('checked', false);
+            }
+        });
+
+        $("#preview-email-add-template").click(function (e) {
+            e.preventDefault();
+            let tmpdata = [];
+            $.each($("input[name='CustomerID']:checked"), function () {
+                tmpdata.push(+$(this).val());
+            });
+            if ($('#CampaignName').val() == '') {
+                $('#CampaignName').focus();
+                toastr.error('Please enter campaign name');
+            }
+            if ($('#TemplateId').val() == null) {
+                toastr.error('Select template');
+            }
+            if (tmpdata.length > 0) {
+                let TD;
+                if (isTemplateChanged) {
+                    TD = CKEDITOR.instances['TemplateData'].getData();
+                }
+                $.ajax({
+                    type: "POST",
+                    url: BaseUrl + 'api/CampaignApi/EmailPreview',
+                    data: JSON.stringify({
+                        "CampaignViewModel": {
+                            CampaignName:  $('#CampaignName').val(),
+                            CampaignOwner: "a",
+                            Start_Date: start ? start : moment($('#Start_Date').val())._d,
+                            End_Date: end ? end : moment($('#End_Date').val())._d,
+                            CampaignBudget: 1,
+                            ExpectedRevenue: 1,
+                            CreatedOn: new Date(),
+                            ModifiedOn: new Date(),
+                            CreatedBy: 1,
+                            CampaignStatusId: 1,
+                            MarketingTypeId: 1,
+                            MarketingStrategyId: 1,
+                            TemplateId: $('#TemplateId').val(),
+                            BrandId: 2
+                        },
+                        CustomerID: tmpdata,
+                        Temp: TD ? TD : CKEDITOR.instances['TemplateData'].getData()
+                    }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        $("#preview").modal("show");
+                        $("#email-content").html(result);
+                    }, error: function () {
+                    }
+                });
+            } else {
+                toastr.error("please select the customer");
+            }
+        });
+    });
+
+
+</script>
+

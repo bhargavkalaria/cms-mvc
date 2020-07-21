@@ -1,0 +1,54 @@
+﻿@model IEnumerable<CMS.BE.ViewModels.CustomerViewModel>
+
+@{
+    ViewBag.Title = "Customers";
+}
+@{
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+<h2>Customers</h2>
+
+
+<table class="table table-striped">
+    <thead class="bg-blue">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mobile)
+            </th>
+
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+
+
+
+        </tr>
+    }
+
+</table>

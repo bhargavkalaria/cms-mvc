@@ -1,0 +1,15 @@
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\CMS.DL.dll.config
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\CMS.DL.dll
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\CMS.DL.pdb
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\CMS.Data.dll
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\EntityFramework.dll
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\CMS.Data.pdb
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\CMS.Data.dll.config
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\EntityFramework.xml
+D:\Projects\Campaign_Management_System\CMS.DL\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\Campaign_Management_System\CMS.DL\obj\Debug\CMS.DL.csprojAssemblyReference.cache
+D:\Projects\Campaign_Management_System\CMS.DL\obj\Debug\CMS.DL.csproj.CoreCompileInputs.cache
+D:\Projects\Campaign_Management_System\CMS.DL\obj\Debug\CMS.DL.csproj.CopyComplete
+D:\Projects\Campaign_Management_System\CMS.DL\obj\Debug\CMS.DL.dll
+D:\Projects\Campaign_Management_System\CMS.DL\obj\Debug\CMS.DL.pdb

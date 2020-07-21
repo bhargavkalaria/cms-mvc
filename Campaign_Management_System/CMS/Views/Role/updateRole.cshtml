@@ -1,0 +1,161 @@
+﻿@model CMS.BE.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Update Access";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+            <h3><b>Name :</b> @Model.FName @Model.LName</h3>
+        </div>
+        <div class="col-4">
+            <h3><b>Role : </b> @Model.Role </h3>
+        </div>
+    </div>
+ </div>
+@using (Html.BeginForm("updateRole", "Role", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <!-- /Starting For Role Access -->
+
+    <div class="row">
+        <input type="hidden" name="UId" value=@Model.UId />
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10px">No.</th>
+                <th>User</th>
+                <th>Add</th>
+                <th>Edit</th>
+                <th>View</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1.</td>
+                <td>Access To Campaign</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.addCampaignAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.editCampaignAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.viewCampaignAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.deleteCampainAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>2.</td>
+                <td>Access To Quick Campaigns</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.addQuickCampaignAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.viewQuickCampaignAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+
+            </tr>
+            <tr>
+                <td>3.</td>
+                <td>Access To Upload Customer</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.uploadCustomerAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+
+            </tr>
+            <tr>
+                <td>4.</td>
+                <td>Access To Add New User</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.addUserAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+
+            </tr>
+            <tr>
+                <td>5.</td>
+                <td>Access To Brand Master</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.addBrandAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.editBrandAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.viewBrandAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.deleteBrandAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>6.</td>
+                <td>Access To Template Master</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.addTemplateAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.editTemplateAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.viewTemplateAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.deleteTemplateAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>7.</td>
+                <td>Access To Report</td>
+                <td>
+                    @Html.CheckBoxFor(Model => Model.hasReportAccess, new { @class = "mr-1 roles-checkbox" })
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+                <td>
+                    <input type="checkbox" disabled>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end mt-5">
+        <input type="submit" class="btn btn-secondary ml-0" value="Update Access" />
+        <a title="Back to List" href="/Role/UserList" class="ml-3 btn btn-primary backtolist"><i class="fas fa-backward mr-2"></i>Back</a>
+    </div>
+}

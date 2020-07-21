@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Feedback";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Feedback</h2>
+<form action="Feedback" method="post">
+    <input type="hidden" name="CustomerId" value=@ViewBag.CustomerId>
+    <input type="hidden" name="CampaignID" value=@ViewBag.CampaignId />
+    <input type="radio" value="Positive" name="Res">Positive<br>
+    <input type="radio" value="Neutral" name="Res">Neutral<br>
+    <input type="radio" value="Negative" name="Res">Negative<br>
+    <input type="submit" value="Give Feedback ">
+</form>
+
+

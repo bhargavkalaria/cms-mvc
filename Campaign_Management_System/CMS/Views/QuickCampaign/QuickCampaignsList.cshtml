@@ -1,0 +1,132 @@
+﻿@model IEnumerable<CMS.BE.ViewModels.QuickCampaignViewModel>
+
+@{
+    ViewBag.Title = "QuickCampaignsList";
+
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+
+<link href="~/Content/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+<link href="~/Content/css/tooltip.css" rel="stylesheet" />
+
+<div class="d-flex justify-content-sm-between">
+    <h2> QuickCampaign List</h2>
+    @if (Session["addQuickCampaignAccess"] != null)
+    {
+        //show link
+        <div class="add-campaign-button cursor-pointer" onclick="window.location.href = '/QuickCampaign/AddQuickcampaign'">
+            <i class="fas fa-plus mr-2" style="color:white"></i>
+            <span class="text-white">Create QuickCampaign</span>
+            @*@Html.ActionLink("Create Campaign", "Addcampaign")*@
+        </div>
+    }
+    else
+    {
+        //disabled link
+        
+    }
+</div>
+
+<br />
+<div class="card">
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>Created On</th>
+                    <th>Modified On</th>
+                   @* <th>Created By</th>*@
+                    <th>Campaign Budget</th>
+                    <th>Expected Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <div class="container-fluid">
+                    <div class="row active-with-click">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.QuickCampaignName
+                                </td>
+                                <td>
+                                    @item.Start_Date
+                                </td>
+                                <td>
+                                    @item.CreatedOn
+                                </td>
+                                <td>
+                                    @item.ModifiedOn
+                                </td>
+                                @*<td>
+                                    @item.CreatedBy
+                                </td>*@
+                                <td>
+                                    @item.CampaignBudget
+                                </td>
+                                <td>
+                                    @item.ExpectedRevenue
+                                </td>
+                                <td>
+                                    <a class="btn" @*onclick="EditCampaign(@item.CampaignId,event)"*@><i class="fas fa-edit"></i></a>
+
+
+                                    <a class="btn" @*href="/campaign/Details/@item.CampaignId"*@><i class="fas fa-info-circle"></i></a>
+                                </td>
+
+
+                            </tr>
+                        }
+
+                    </div>
+                </div>
+            </tbody>
+
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script>
+    $(document).ready(function () {
+         const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000
+                       });
+        if ('@TempData["Message"]' == "Success!") {
+             Toast.fire({
+                type: 'success',
+                title: 'QuickCampaign Successfully Added.'
+              })
+        }
+        else if ('@TempData["Message"]' == "SuccessEdit!") {
+             Toast.fire({
+                type: 'success',
+                title: 'QuickCampaign Successfully Updated.'
+              })
+        }
+    });
+    $(function () {
+        $("#example1").DataTable();
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+        });
+    });
+</script>

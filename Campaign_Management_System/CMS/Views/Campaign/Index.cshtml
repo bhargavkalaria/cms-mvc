@@ -1,0 +1,233 @@
+﻿@*@model IEnumerable<CMS.BE.ViewModels.CampaignViewModel>*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Dashboard.cshtml";
+}
+<link href="~/Content/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+
+<div class="d-flex justify-content-sm-between">
+    <h2> Campaign List</h2>
+    @if (Session["addCampaignAccess"] != null)
+    {
+        //show button
+        <div class="add-campaign-button cursor-pointer" onclick="window.location.href = '/Campaign/Addcampaign'">
+            <i class="fas fa-plus mr-2" style="color:white"></i>
+            <span class="text-white">Create Campaign</span>
+            @*@Html.ActionLink("Create Campaign", "Addcampaign")*@
+        </div>
+    }
+    else
+    {
+        //disabled button
+        
+    }
+</div>
+<br />
+
+<div class="card">
+
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th @*class="w-75"*@>
+                        Name
+                    </th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    @if (Session["viewCampaignAccess"] != null || Session["editCampaignAccess"] !=null || Session["deleteCampainAccess"]!=null)
+                    {
+                    <th>Action</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <div class="container-fluid">
+                    <div class="row active-with-click">
+                        @foreach (var item in Model)
+                        {
+
+
+                            <tr>
+                                <td>
+                                    <span>@item.CampaignName</span>
+                                </td>
+                                <td>
+                                    <span>@item.CampaignStatus.Status</span>
+                                </td>
+                                <td>
+                                    <span>@item.Start_Date</span>
+                                </td>
+                                <td>
+                                    <span>@item.End_Date</span>
+                                </td>
+                                <td>
+                                    @if (@item.CampaignStatus.Status == "Completed")
+                                    {
+                                        if (Session["viewCampaignAccess"] != null)
+                                        {
+                                            //enable link
+                                        <a class="btn" href="/campaign/Details/@item.CampaignId"><i class="fas fa-info-circle"></i></a>
+                                        }
+                                        else
+                                        {
+                                            //disable link
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Session["editCampaignAccess"] != null)
+                                        {
+                                            //SHow Link
+                                            <a class="btn" onclick="EditCampaign(@item.CampaignId,event)"><i class="fas fa-edit"></i></a>
+                                        }
+                                        else
+                                        {
+                                            //disabled link
+                                        }
+
+                                        if (Session["deleteCampainAccess"] != null)
+                                        {
+                                            //show link
+                                            <a class="btn openModal" data-campaign="@item.CampaignName" id="@item.CampaignId"><i data-campaign="@item.CampaignName" id="@item.CampaignId" class="far fa-trash-alt"></i></a>
+                                        }
+                                        else
+                                        {
+                                            //disabled link
+                                        }
+
+                                        if (Session["viewCampaignAccess"] != null)
+                                        {
+                                            //show link
+                                            <a class="btn" href="/campaign/Details/@item.CampaignId"><i class="fas fa-info-circle"></i></a>
+                                        }
+                                        else
+                                        {
+                                            //disabled link
+                                        }
+
+                                    }
+                                </td>
+                            </tr>
+
+                        }
+
+                    </div>
+                </div>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Delete Campaign</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Are you sure you want to delete campaign?</h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="delete-campaign">Delete Campaign</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Content/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+               const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000
+               });
+
+        if ('@TempData["Message"]' == "Success!") {
+              Toast.fire({
+                type: 'success',
+                title: 'Campaign Successfully Added.'
+              })
+        }
+        else if ('@TempData["Message"]' == "SuccessEdit!") {
+           Toast.fire({
+                type: 'success',
+                title: 'Campaign Successfully Edited.'
+              })
+        }
+    });
+        $(function() {
+            $("#example1").DataTable();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+            });
+        });
+
+
+    let deleteId;
+    function EditCampaign(id, event) {
+        event.preventDefault();
+        window.location.href = '/Campaign/Edit/' + id
+    }
+    function DeleteCampaign(id, event) {
+        event.preventDefault();
+        window.location.href = '/Campaign/Delete/' + id
+    }
+
+    $(".openModal").click(function (e) {
+        deleteId = e.target.id;
+        $('.modal-title').html('Delete Campaign ' + e.target.dataset.campaign)
+        $("#exampleModal").modal('show');
+    });
+
+    $('#delete-campaign').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/Campaign/Delete/',
+            dataType: 'json',
+            data: {
+                CampaignId: deleteId
+            },
+            success: function (result) {
+                if (result) {
+
+                        sessionStorage.setItem('test', JSON.stringify(true));
+                    location.reload();
+                } else {
+                    //toastr.error('Error in deleting,Please try again later');
+                }
+            },
+            error: function (err) {
+                console.log(err);
+                //toastr.error('Error in deleting,Please try again later');
+           }
+            });
+
+        })
+           $(function () {
+        if (JSON.parse(sessionStorage.getItem('test'))) {
+            sessionStorage.setItem('test', JSON.stringify(false));
+             Toast.fire({
+                type: 'success',
+                title: 'Campaign Successfully Deleted.'
+              })
+        }
+       });
+
+</script>

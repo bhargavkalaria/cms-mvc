@@ -1,0 +1,72 @@
+﻿@model CMS.BE.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="grey">
+
+</div>
+<div class="login-custom">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="../../index2.html"><span class="title"><b>Campaign Management</b> System</span></a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Sign in to start your campaign
+                </p>
+                @using (Html.BeginForm("Login", "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    if (ViewBag.LoginError != null)
+                    {
+                        <p class="text-danger">@ViewBag.LoginError</p>
+                    }
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="input-group mb-3">
+                        @Html.TextBoxFor(m => m.Email, new { placeholder = "Enter Email", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger border-red" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope iconLogin"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        @Html.PasswordFor(m => m.Password, new { placeholder = "Enter Password", @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger border-red" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock iconLogin"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        <!-- /.col -->
+                        <button style="width:100%" id="login" class="btn btn-primary px-5">Sign In</button>
+                        <!-- /.col -->
+                        <div class="col-8">
+                            <div >
+                                @Html.CheckBoxFor(Model => Model.RememberMe)
+                                <label for="remember">
+                                    Remember Me
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <p class="mb-1">
+                    @Html.ActionLink("I forgot my password", "ForgotPassword")
+                </p>
+                
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+</div>

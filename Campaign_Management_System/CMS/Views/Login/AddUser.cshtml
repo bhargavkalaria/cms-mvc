@@ -1,0 +1,96 @@
+﻿@model CMS.BE.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="grey">
+
+</div>
+<div class="login-custom">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="../../index2.html"><span class="title"><b>Campaign Management</b> System</span></a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Sign in to start your campaign</p>
+                @using (Html.BeginForm("AddUser", "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    if (ViewBag.LoginError != null)
+                    {
+                        <p class="text-danger">@ViewBag.LoginError</p>
+                    }
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="input-group mb-3">
+
+                        @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "form-control", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger border-red" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope iconLogin"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        @*<input type="password" name="Password" id="Password" />*@
+                        @Html.PasswordFor(m => m.Email, new { @Name = "Password", placeholder = "Password", @class = "form-control", @id = "Password", required = "required" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger border-red" })
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock iconLogin"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <select style="width:86%;" class="input-group-text" id="Role" name="Role">
+                            <option selected disabled>------------SELECT ROLE-----------</option>
+                            <option>ADMIN</option>
+                            <option>MANAGEMENT</option>
+                            <option>MARKETING</option>
+                            <option>DATA-ENTRY USER</option>
+                        </select>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user-tag" style="color:black;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" required class="form-control" id="FName" name="FName" placeholder="Enter First Name" aria-label="Username" aria-describedby="basic-addon1" value=@ViewBag.Fname>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user iconLogin"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" required class="form-control" id="LName" name="LName" placeholder="Enter Last Names" aria-label="Username" aria-describedby="basic-addon1" value=@ViewBag.Lname>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user iconLogin"></span>
+                            </div>
+                        </div>
+                        <br /><p style="color:red">
+                            @ViewBag.NameValidationError
+                            <br />@ViewBag.FormValidationError
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" id="add_user" class="btn btn-primary">Add User</button>
+                            @*<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#roles">Manage Roles</button>*@
+                        </div>
+                    </div>
+                }
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+</div>
+
+
